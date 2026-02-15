@@ -1,0 +1,102 @@
+baseURL = "https://sen.im/"
+languageCode = "zh-cn"
+defaultContentLanguage = "zh-cn"
+title = "森之日报"
+theme = "PaperMod"
+[pagination]
+  pagerSize = 10
+
+enableRobotsTXT = true
+buildDrafts = false
+buildFuture = false
+buildExpired = false
+
+[params]
+  env = "production"
+  title = "森之日报"
+  description = "每日 AI 资讯与深度洞察"
+  author = "森"
+  defaultTheme = "auto"
+  ShowReadingTime = true
+  ShowShareButtons = true
+  ShowPostNavLinks = true
+  ShowBreadCrumbs = true
+  ShowCodeCopyButtons = true
+  ShowWordCount = true
+  ShowRssButtonInSectionTermList = true
+  UseHugoToc = true
+  disableSpecial1stPost = false
+  disableScrollToTop = false
+  comments = true
+  hidemeta = false
+  hideSummary = false
+  showtoc = true
+
+  [params.homeInfoParams]
+    Title = "森之日报"
+    Content = "每日 AI 资讯与深度洞察 — 资本的洪流、人才的迁徙与物理世界的觉醒"
+
+  [[params.socialIcons]]
+    name = "rss"
+    url = "/index.xml"
+
+  [params.cover]
+    hidden = false
+    hiddenInList = false
+    hiddenInSingle = false
+
+  [params.editPost]
+    disabled = true
+
+  [params.fuseOpts]
+    isCaseSensitive = false
+    shouldSort = true
+    location = 0
+    distance = 1000
+    threshold = 0.4
+    minMatchCharLength = 0
+    keys = ["title", "permalink", "summary", "content"]
+
+[outputs]
+  home = ["HTML", "RSS", "JSON"]
+
+[taxonomies]
+  tag = "tags"
+  category = "categories"
+
+[markup]
+  [markup.highlight]
+    noClasses = false
+
+[sitemap]
+  changefreq = "daily"
+  filename = "sitemap.xml"
+  priority = 0.5
+
+[minify]
+  disableXML = true
+  minifyOutput = true
+
+[[menu.main]]
+  identifier = "home"
+  name = "首页"
+  url = "/"
+  weight = 1
+
+[[menu.main]]
+  identifier = "archives"
+  name = "时间线"
+  url = "/archives/"
+  weight = 2
+
+[[menu.main]]
+  identifier = "tags"
+  name = "标签"
+  url = "/tags/"
+  weight = 3
+
+[[menu.main]]
+  identifier = "search"
+  name = "搜索"
+  url = "/search/"
+  weight = 4
