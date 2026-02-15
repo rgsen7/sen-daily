@@ -1,4 +1,4 @@
-baseURL = "https://sen.im/"
+baseURL = "https://rgsen7.github.io/sen-daily/"
 languageCode = "zh-cn"
 defaultContentLanguage = "zh-cn"
 title = "森之日报"
@@ -14,7 +14,7 @@ buildExpired = false
 [params]
   env = "production"
   title = "森之日报"
-  description = "每日 AI 资讯与深度洞察"
+  description = "每日追踪 AI 行业融资、产品、技术突破，附独家解读"
   author = "森"
   defaultTheme = "auto"
   ShowReadingTime = true
@@ -34,16 +34,24 @@ buildExpired = false
 
   [params.homeInfoParams]
     Title = "森之日报"
-    Content = "每日 AI 资讯与深度洞察 — 资本的洪流、人才的迁徙与物理世界的觉醒"
+    Content = """每日追踪 AI 行业融资、产品、技术突破，附独家解读。
+
+📡 [订阅 RSS](/sen-daily/index.xml) · 每天早上自动更新"""
 
   [[params.socialIcons]]
     name = "rss"
     url = "/index.xml"
 
+  # Google Analytics — 等仙森提供 GA ID 后取消注释
+  # googleAnalyticsID = "G-XXXXXXXXXX"
+
   [params.cover]
     hidden = false
     hiddenInList = false
     hiddenInSingle = false
+
+  # 默认 Open Graph 图片（社交媒体分享预览）
+  images = ["/og-default.png"]
 
   [params.editPost]
     disabled = true
@@ -100,3 +108,9 @@ buildExpired = false
   name = "搜索"
   url = "/search/"
   weight = 4
+
+[[menu.main]]
+  identifier = "subscribe"
+  name = "📡 订阅"
+  url = "/index.xml"
+  weight = 5
