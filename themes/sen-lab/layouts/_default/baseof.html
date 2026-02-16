@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ .Site.LanguageCode }}" data-theme="dark">
+<html lang="{{ .Site.LanguageCode }}" data-theme="light">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -128,8 +128,8 @@
   <script>
     const html = document.documentElement;
     const stored = localStorage.getItem('theme');
-    if (stored === 'light') html.setAttribute('data-theme', 'light');
-    else html.setAttribute('data-theme', 'dark');
+    if (stored === 'dark') html.setAttribute('data-theme', 'dark');
+    else html.setAttribute('data-theme', 'light');
     
     function toggleTheme() {
       const current = html.getAttribute('data-theme');
