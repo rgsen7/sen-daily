@@ -1,7 +1,7 @@
 {{ define "main" }}
-<div class="text-center py-20">
-  <p class="text-6xl font-mono dark:text-fg-muted/20 text-gray-200 font-bold">404</p>
-  <p class="mt-4 text-sm dark:text-fg-muted text-gray-500">页面不存在</p>
-  <a href="{{ .Site.BaseURL }}" class="mt-6 inline-block text-xs font-mono text-accent hover:underline">← 返回首页</a>
+<div class="flex flex-col items-center justify-center py-24">
+  <span class="text-6xl font-mono font-bold" style="color: var(--fg);">404</span>
+  <p class="text-sm mt-4" style="color: var(--fg-muted);">页面不存在</p>
+  <a href="{{ .Site.BaseURL }}" class="text-sm mt-6 font-mono hover:opacity-70 transition-opacity" style="color: var(--primary);">← 返回首页</a>
 </div>
 {{ end }}

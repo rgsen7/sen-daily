@@ -1,18 +1,51 @@
 {{ define "main" }}
-<div>
-  <h1 class="text-lg font-semibold dark:text-fg text-fg-light tracking-tight mb-6">{{ .Title }}</h1>
-  
-  <div class="space-y-1">
-    {{ range .Pages.ByDate.Reverse }}
-    <a href="{{ .Permalink }}" class="group flex items-baseline gap-4 py-3 border-b dark:border-border border-gray-100 hover:dark:bg-white/[0.02] hover:bg-gray-50 -mx-3 px-3 rounded transition-colors">
-      <time class="text-xs font-mono dark:text-fg-muted text-gray-400 shrink-0 tabular-nums">
-        {{ .Date.Format "01-02" }}
-      </time>
-      <h2 class="text-sm font-medium dark:text-fg text-fg-light group-hover:text-accent transition-colors truncate">
-        {{ .Title }}
-      </h2>
+<div class="mb-8">
+  <h1 class="text-2xl font-semibold tracking-tight" style="color: var(--fg);">
+    {{ .Title }}
+  </h1>
+  {{ with .Description }}
+  <p class="mt-2 text-sm" style="color: var(--fg-muted);">{{ . }}</p>
+  {{ end }}
+</div>
+
+{{/* Group posts by month */}}
+{{ $pages := .Pages }}
+{{ if .IsHome }}{{ $pages = where site.RegularPages "Section" "posts" }}{{ end }}
+
+{{ range $pages.GroupByDate "2006-01" }}
+<div class="mb-10">
+  <h2 class="text-xs font-mono font-medium uppercase tracking-widest mb-4" style="color: var(--fg-muted);">
+    {{ .Key }}
+  </h2>
+  <div class="space-y-3">
+    {{ range .Pages }}
+    <a href="{{ .Permalink }}" class="card block px-5 py-4 group">
+      <div class="flex items-start justify-between gap-4">
+        <div class="min-w-0 flex-1">
+          <h3 class="text-sm font-medium group-hover:text-primary transition-colors truncate" style="color: var(--fg);">
+            {{ .Title }}
+          </h3>
+          {{ with .Description }}
+          <p class="text-xs mt-1.5 line-clamp-2" style="color: var(--fg-muted);">{{ . }}</p>
+          {{ end }}
+          {{ with .Params.tags }}
+          <div class="flex flex-wrap gap-1.5 mt-2">
+            {{ range . }}
+            <span class="bg-tag text-xs font-mono px-1.5 py-0.5 rounded">{{ . }}</span>
+            {{ end }}
+          </div>
+          {{ end }}
+        </div>
+        <time class="text-xs font-mono shrink-0 pt-0.5" style="color: var(--fg-muted);" datetime="{{ .Date.Format "2006-01-02" }}">
+          {{ .Date.Format "01-02" }}
+        </time>
+      </div>
     </a>
     {{ end }}
   </div>
 </div>
+{{ end }}
+
+{{/* Pagination */}}
+{{ template "_internal/pagination.html" . }}
 {{ end }}

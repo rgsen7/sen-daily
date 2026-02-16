@@ -1,44 +1,69 @@
 {{ define "main" }}
 <article class="max-w-article mx-auto">
   {{/* Header */}}
-  <header class="mb-8 pb-6 border-b dark:border-border border-gray-200">
-    <time class="text-xs font-mono dark:text-fg-muted text-gray-400 tabular-nums">
+  <header class="mb-10">
+    <time class="text-xs font-mono" style="color: var(--fg-muted);" datetime="{{ .Date.Format "2006-01-02" }}">
       {{ .Date.Format "2006-01-02" }}
     </time>
-    <h1 class="mt-2 text-xl font-semibold dark:text-fg text-fg-light tracking-tight leading-snug">
+    <h1 class="text-2xl font-semibold tracking-tight mt-2" style="color: var(--fg);">
       {{ .Title }}
     </h1>
-    {{ with .Params.summary }}
-    <p class="mt-3 text-sm dark:text-fg-muted text-gray-500 leading-relaxed">{{ . }}</p>
+    {{ with .Description }}
+    <p class="text-sm mt-3" style="color: var(--fg-muted);">{{ . }}</p>
     {{ end }}
     {{ with .Params.tags }}
-    <div class="mt-4 flex flex-wrap gap-1.5">
+    <div class="flex flex-wrap gap-1.5 mt-4">
       {{ range . }}
-      <a href="{{ "tags/" | absURL }}{{ . | urlize }}/" 
-         class="text-[10px] font-mono dark:text-fg-muted text-gray-400 dark:bg-white/[0.04] bg-gray-100 px-2 py-0.5 rounded hover:text-accent transition-colors">
-        {{ . }}
-      </a>
+      <a href="{{ "tags/" | absURL }}{{ . | urlize }}/" class="bg-tag text-xs font-mono px-2 py-0.5 rounded hover:opacity-80 transition-opacity">{{ . }}</a>
       {{ end }}
     </div>
     {{ end }}
   </header>
 
   {{/* Content */}}
-  <div class="article-content dark:text-fg-muted text-gray-600 text-[15px]">
+  <div class="article-content" style="color: var(--fg-muted);">
     {{ .Content }}
   </div>
 
-  {{/* Nav */}}
-  <nav class="mt-12 pt-6 border-t dark:border-border border-gray-200 flex justify-between text-xs font-mono">
-    {{ with .PrevInSection }}
-    <a href="{{ .Permalink }}" class="dark:text-fg-muted text-gray-400 hover:text-accent transition-colors">← {{ .Title | truncate 40 }}</a>
-    {{ else }}<span></span>{{ end }}
-    {{ with .NextInSection }}
-    <a href="{{ .Permalink }}" class="dark:text-fg-muted text-gray-400 hover:text-accent transition-colors">{{ .Title | truncate 40 }} →</a>
-    {{ else }}<span></span>{{ end }}
+  {{/* Footer nav */}}
+  <nav class="border-t mt-16 pt-8" style="border-color: var(--border);">
+    <div class="flex justify-between gap-4">
+      {{ with .PrevInSection }}
+      <a href="{{ .Permalink }}" class="group flex-1 min-w-0">
+        <span class="text-xs font-mono uppercase tracking-wide" style="color: var(--fg-muted);">← 上一篇</span>
+        <p class="text-sm font-medium mt-1 truncate group-hover:text-primary transition-colors" style="color: var(--fg);">{{ .Title }}</p>
+      </a>
+      {{ else }}<div class="flex-1"></div>{{ end }}
+
+      {{ with .NextInSection }}
+      <a href="{{ .Permalink }}" class="group flex-1 min-w-0 text-right">
+        <span class="text-xs font-mono uppercase tracking-wide" style="color: var(--fg-muted);">下一篇 →</span>
+        <p class="text-sm font-medium mt-1 truncate group-hover:text-primary transition-colors" style="color: var(--fg);">{{ .Title }}</p>
+      </a>
+      {{ else }}<div class="flex-1"></div>{{ end }}
+    </div>
   </nav>
 
-  {{/* Comments */}}
-  {{ partial "comments.html" . }}
+  {{/* Giscus comments */}}
+  {{ if .Site.Params.giscus.repo }}
+  <div class="mt-12" id="comments">
+    <script src="https://giscus.app/client.js"
+      data-repo="{{ .Site.Params.giscus.repo }}"
+      data-repo-id="{{ .Site.Params.giscus.repoId }}"
+      data-category="{{ .Site.Params.giscus.category }}"
+      data-category-id="{{ .Site.Params.giscus.categoryId }}"
+      data-mapping="{{ .Site.Params.giscus.mapping }}"
+      data-strict="{{ .Site.Params.giscus.strict }}"
+      data-reactions-enabled="{{ .Site.Params.giscus.reactionsEnabled }}"
+      data-emit-metadata="0"
+      data-input-position="top"
+      data-theme="dark"
+      data-lang="zh-CN"
+      data-loading="lazy"
+      crossorigin="anonymous"
+      async>
+    </script>
+  </div>
+  {{ end }}
 </article>
 {{ end }}

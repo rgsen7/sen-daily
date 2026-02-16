@@ -1,14 +1,15 @@
 {{ define "main" }}
-<div>
-  <h1 class="text-lg font-semibold dark:text-fg text-fg-light tracking-tight mb-6">标签</h1>
-  <div class="flex flex-wrap gap-2">
-    {{ range .Data.Terms.Alphabetical }}
-    <a href="{{ .Page.Permalink }}" 
-       class="inline-flex items-center gap-1.5 text-xs font-mono dark:text-fg-muted text-gray-500 dark:bg-white/[0.04] bg-gray-100 px-2.5 py-1 rounded hover:text-accent transition-colors">
-      {{ .Page.Title }}
-      <span class="dark:text-fg-muted/50 text-gray-300">{{ .Count }}</span>
-    </a>
-    {{ end }}
-  </div>
+<div class="mb-8">
+  <h1 class="text-2xl font-semibold tracking-tight" style="color: var(--fg);">标签</h1>
+</div>
+
+<div class="flex flex-wrap gap-2">
+  {{ range .Site.Taxonomies.tags }}
+  <a href="{{ .Page.Permalink }}" 
+     class="bg-tag text-sm font-mono px-3 py-1.5 rounded hover:opacity-80 transition-opacity inline-flex items-center gap-1.5">
+    {{ .Page.Title }}
+    <span class="text-xs opacity-60">{{ .Count }}</span>
+  </a>
+  {{ end }}
 </div>
 {{ end }}
