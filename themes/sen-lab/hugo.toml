@@ -1,0 +1,7 @@
+[module]
+  [module.hugoVersion]
+    extended = false
+    min = "0.112.0"
+
+[params]
+  description = "森之日报 — 专业 AI 研究控制台"

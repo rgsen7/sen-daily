@@ -1,0 +1,18 @@
+{{ define "main" }}
+<div>
+  <h1 class="text-lg font-semibold dark:text-fg text-fg-light tracking-tight mb-6">{{ .Title }}</h1>
+  
+  <div class="space-y-1">
+    {{ range .Pages.ByDate.Reverse }}
+    <a href="{{ .Permalink }}" class="group flex items-baseline gap-4 py-3 border-b dark:border-border border-gray-100 hover:dark:bg-white/[0.02] hover:bg-gray-50 -mx-3 px-3 rounded transition-colors">
+      <time class="text-xs font-mono dark:text-fg-muted text-gray-400 shrink-0 tabular-nums">
+        {{ .Date.Format "01-02" }}
+      </time>
+      <h2 class="text-sm font-medium dark:text-fg text-fg-light group-hover:text-accent transition-colors truncate">
+        {{ .Title }}
+      </h2>
+    </a>
+    {{ end }}
+  </div>
+</div>
+{{ end }}

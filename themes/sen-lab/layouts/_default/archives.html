@@ -1,0 +1,30 @@
+{{ define "main" }}
+<div>
+  <h1 class="text-lg font-semibold dark:text-fg text-fg-light tracking-tight mb-6">时间线</h1>
+  
+  {{ $pages := where .Site.RegularPages "Type" "posts" }}
+  {{ $grouped := $pages.GroupByDate "2006-01" }}
+  
+  <div class="space-y-8">
+    {{ range $grouped }}
+    <div>
+      <h2 class="text-xs font-mono dark:text-accent text-accent-dim font-medium mb-3 uppercase tracking-wider">
+        {{ .Key }}
+      </h2>
+      <div class="space-y-1 border-l dark:border-border border-gray-200 pl-4 ml-1">
+        {{ range .Pages }}
+        <a href="{{ .Permalink }}" class="group flex items-baseline gap-3 py-2 hover:dark:bg-white/[0.02] -mx-2 px-2 rounded transition-colors">
+          <time class="text-[11px] font-mono dark:text-fg-muted text-gray-400 shrink-0 tabular-nums">
+            {{ .Date.Format "02" }}
+          </time>
+          <span class="text-sm dark:text-fg-muted text-gray-600 group-hover:dark:text-fg group-hover:text-fg-light transition-colors">
+            {{ .Title }}
+          </span>
+        </a>
+        {{ end }}
+      </div>
+    </div>
+    {{ end }}
+  </div>
+</div>
+{{ end }}

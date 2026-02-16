@@ -2,7 +2,7 @@ baseURL = "https://rgsen7.github.io/sen-daily/"
 languageCode = "zh-cn"
 defaultContentLanguage = "zh-cn"
 title = "森之日报"
-theme = "PaperMod"
+theme = "sen-lab"
 [pagination]
   pagerSize = 10
 

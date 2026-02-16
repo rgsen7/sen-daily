@@ -1,0 +1,28 @@
+<header class="border-b dark:border-border border-gray-200">
+  <nav class="max-w-5xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
+    {{/* Logo / Site name */}}
+    <a href="{{ .Site.BaseURL }}" class="flex items-center gap-2 dark:text-fg text-fg-light font-semibold text-sm tracking-tight hover:opacity-80 transition-opacity">
+      <span class="font-mono text-accent text-xs">▲</span>
+      <span>{{ .Site.Title }}</span>
+    </a>
+
+    {{/* Nav links */}}
+    <div class="flex items-center gap-6">
+      {{ range .Site.Menus.main }}
+      <a href="{{ .URL | absURL }}" 
+         class="text-xs font-medium dark:text-fg-muted text-gray-500 hover:dark:text-fg hover:text-fg-light transition-colors tracking-wide uppercase">
+        {{ .Name }}
+      </a>
+      {{ end }}
+
+      {{/* Theme toggle */}}
+      <button onclick="toggleTheme()" 
+              class="text-xs dark:text-fg-muted text-gray-400 hover:dark:text-fg hover:text-fg-light transition-colors"
+              aria-label="切换主题">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
+        </svg>
+      </button>
+    </div>
+  </nav>
+</header>
