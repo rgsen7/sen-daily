@@ -2,112 +2,72 @@
 {{ $posts := where site.RegularPages "Section" "posts" }}
 {{ $latest := first 1 $posts }}
 
-{{/* ===== Bento Grid — proper square box ===== */}}
-<section class="mb-10">
-  <style>
-    .bento-box {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 10px;
-    }
-    @media (min-width: 768px) {
-      .bento-box {
-        grid-template-columns: 1fr 1fr 1fr;
-        grid-template-rows: 1fr 1fr;
-        height: 420px;
-      }
-      .bento-box .bento-main {
-        grid-column: 1 / 3;
-        grid-row: 1 / 3;
-      }
-    }
-    .bento-cell {
-      background: var(--entry);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 1.25rem;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      transition: box-shadow 0.2s, transform 0.15s;
-      overflow: hidden;
-    }
-    .bento-cell:hover {
-      box-shadow: 0 8px 30px rgba(0,0,0,0.12);
-    }
-    [data-theme="dark"] .bento-cell:hover {
-      box-shadow: 0 8px 30px rgba(0,0,0,0.4);
-    }
-  </style>
+{{/* ===== Bento Grid ===== */}}
+<section class="bento mb-10">
+  {{/* Main — 2 cols, 2 rows */}}
+  {{ range $latest }}
+  <a href="{{ .Permalink }}" class="bento-card bento-main flex flex-col justify-between">
+    <div>
+      <div class="flex items-center gap-2 mb-3">
+        <span class="text-xs font-mono font-semibold px-2 py-1 rounded" style="background: var(--fg); color: var(--bg);">最新一期</span>
+        <time class="text-sm font-mono" style="color: var(--fg-secondary);">{{ .Date.Format "2006-01-02" }}</time>
+      </div>
+      <h2 class="text-2xl font-extrabold leading-tight" style="color: var(--fg);">{{ .Title }}</h2>
+      {{ with .Params.summary }}
+      <p class="text-sm mt-3 leading-relaxed line-clamp-3" style="color: var(--fg-secondary);">{{ . }}</p>
+      {{ end }}
+    </div>
+    {{ with .Params.tags }}
+    <div class="flex flex-wrap gap-2 mt-4">
+      {{ range first 5 . }}
+      <span class="text-xs font-mono px-2 py-0.5 rounded" style="background: var(--code-bg); color: var(--fg-secondary);">{{ . }}</span>
+      {{ end }}
+    </div>
+    {{ end }}
+  </a>
+  {{ end }}
 
-  <div class="bento-box">
-    {{/* Main — 2 cols, 2 rows */}}
-    {{ range $latest }}
-    <a href="{{ .Permalink }}" class="bento-cell bento-main group">
-      <div>
-        <div class="flex items-center gap-2 mb-3">
-          <span class="text-xs font-mono font-semibold px-2 py-1 rounded" style="background: var(--fg); color: var(--bg);">头条</span>
-          <time class="text-sm font-mono" style="color: var(--fg-secondary);">{{ .Date.Format "2006-01-02" }}</time>
+  {{/* Top-right — previous post */}}
+  {{ with index (after 1 (first 2 $posts)) 0 }}
+  <a href="{{ .Permalink }}" class="bento-card bento-side flex flex-col justify-between">
+    <div>
+      <time class="text-xs font-mono" style="color: var(--fg-secondary);">{{ .Date.Format "2006-01-02" }}</time>
+      <h3 class="text-sm font-bold leading-snug mt-2 line-clamp-3" style="color: var(--fg);">{{ .Title }}</h3>
+    </div>
+    {{ with .Params.tags }}
+    <div class="flex flex-wrap gap-1 mt-2">
+      {{ range first 2 . }}
+      <span class="text-xs font-mono px-1.5 py-0.5 rounded" style="background: var(--code-bg); color: var(--fg-secondary);">{{ . }}</span>
+      {{ end }}
+    </div>
+    {{ end }}
+  </a>
+  {{ end }}
+
+  {{/* Bottom-right — market data via API */}}
+  <div class="bento-card bento-side flex flex-col justify-between" id="market-card">
+    <div>
+      <div class="flex items-center justify-between mb-3">
+        <span class="text-xs font-mono font-semibold" style="color: var(--fg-secondary);">市场数据</span>
+        <span class="text-xs font-mono" style="color: var(--fg-secondary); opacity: 0.5;" id="market-time">加载中…</span>
+      </div>
+      <div class="space-y-3" id="market-data">
+        <div class="market-row">
+          <span class="text-xs font-mono" style="color: var(--fg-secondary);">XAUUSD</span>
+          <span class="text-lg font-bold font-mono" style="color: var(--fg);" id="price-gold">--</span>
         </div>
-        <h2 class="text-2xl font-extrabold leading-tight group-hover:translate-x-1 transition duration-200" style="color: var(--fg);">{{ .Title }}</h2>
-        {{ with .Params.summary }}
-        <p class="text-sm mt-3 leading-relaxed line-clamp-3" style="color: var(--fg-secondary);">{{ . }}</p>
-        {{ end }}
-      </div>
-      {{ with .Params.tags }}
-      <div class="flex flex-wrap gap-2 mt-4">
-        {{ range first 5 . }}
-        <span class="text-xs font-mono px-2 py-0.5 rounded" style="background: var(--code-bg); color: var(--fg-secondary);">{{ . }}</span>
-        {{ end }}
-      </div>
-      {{ end }}
-    </a>
-    {{ end }}
-
-    {{/* Top-right — post */}}
-    {{ with index (after 1 (first 2 $posts)) 0 }}
-    <a href="{{ .Permalink }}" class="bento-cell group">
-      <div class="group-hover:translate-x-1 transition duration-200">
-        <time class="text-xs font-mono" style="color: var(--fg-secondary);">{{ .Date.Format "2006-01-02" }}</time>
-        <h3 class="text-sm font-bold leading-snug mt-2 line-clamp-3" style="color: var(--fg);">{{ .Title }}</h3>
-      </div>
-      {{ with .Params.tags }}
-      <div class="flex flex-wrap gap-1 mt-2">
-        {{ range first 2 . }}
-        <span class="text-xs font-mono px-1.5 py-0.5 rounded" style="background: var(--code-bg); color: var(--fg-secondary);">{{ . }}</span>
-        {{ end }}
-      </div>
-      {{ end }}
-    </a>
-    {{ end }}
-
-    {{/* Bottom-right — market data via TradingView */}}
-    <div class="bento-cell" style="padding: 0; overflow: hidden;">
-      <div style="height: 100%; width: 100%;">
-        <div class="tradingview-widget-container" style="height: 100%; width: 100%;">
-          <div class="tradingview-widget-container__widget" style="height: 100%; width: 100%;"></div>
-          <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-market-quotes.js" async>
-          {
-            "width": "100%",
-            "height": "100%",
-            "symbolsGroups": [
-              {
-                "symbols": [
-                  { "name": "TVC:US10Y", "displayName": "US10Y" },
-                  { "name": "NASDAQ:IXIC", "displayName": "IXIC" },
-                  { "name": "TVC:GOLD", "displayName": "XAUUSD" }
-                ]
-              }
-            ],
-            "showSymbolLogo": false,
-            "isTransparent": true,
-            "colorTheme": "dark",
-            "locale": "zh_CN",
-            "largeChartUrl": ""
-          }
-          </script>
+        <div class="market-row">
+          <span class="text-xs font-mono" style="color: var(--fg-secondary);">XAGUSD</span>
+          <span class="text-lg font-bold font-mono" style="color: var(--fg);" id="price-silver">--</span>
+        </div>
+        <div class="market-row">
+          <span class="text-xs font-mono" style="color: var(--fg-secondary);">BTC</span>
+          <span class="text-lg font-bold font-mono" style="color: var(--fg);" id="price-btc">--</span>
         </div>
       </div>
+    </div>
+    <div class="text-right">
+      <span class="text-xs font-mono" style="color: var(--fg-secondary); opacity: 0.4;">via CoinGecko</span>
     </div>
   </div>
 </section>
@@ -136,10 +96,10 @@
 <section id="post-list">
   <h2 class="text-sm font-mono font-semibold uppercase tracking-wider mb-4" style="color: var(--fg-secondary);">全部日报</h2>
   {{ range $posts }}
-  <a href="{{ .Permalink }}" class="block rounded-xl p-5 mb-3 group/entry transition duration-200 hover:shadow-lg" style="background: var(--entry); border: 1px solid var(--border);">
+  <a href="{{ .Permalink }}" class="post-entry block">
     <div class="flex items-start justify-between gap-4">
       <div class="min-w-0 flex-1">
-        <h3 class="text-lg font-bold group-hover/entry:translate-x-1 transition duration-200" style="color: var(--fg);">{{ .Title }}</h3>
+        <h3 class="text-lg font-bold" style="color: var(--fg);">{{ .Title }}</h3>
         {{ with .Params.summary }}
         <p class="text-sm mt-1 line-clamp-2" style="color: var(--fg-secondary);">{{ . }}</p>
         {{ end }}
@@ -152,6 +112,14 @@
   </a>
   {{ end }}
 </section>
+
+<style>
+  .market-row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+  }
+</style>
 
 <script>
 // Relative time labels
@@ -177,6 +145,43 @@ document.querySelectorAll('.relative-time').forEach(el => {
   el.textContent = label;
 });
 
-// end relative time
+// Market data via CoinGecko API (free, no key needed)
+(async function fetchMarket() {
+  try {
+    const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,tether-gold,silver&vs_currencies=usd');
+    if (!res.ok) throw new Error('API error');
+    const data = await res.json();
+
+    // Gold: tether-gold is a proxy; if unavailable, try alternative
+    const gold = data['tether-gold']?.usd;
+    const silver = data['silver']?.usd;
+    const btc = data['bitcoin']?.usd;
+
+    if (gold) document.getElementById('price-gold').textContent = '$' + gold.toLocaleString('en-US', {maximumFractionDigits: 0});
+    if (silver) document.getElementById('price-silver').textContent = '$' + silver.toFixed(2);
+    if (btc) document.getElementById('price-btc').textContent = '$' + btc.toLocaleString('en-US', {maximumFractionDigits: 0});
+
+    document.getElementById('market-time').textContent = '实时';
+  } catch (e) {
+    // Fallback: try metals.dev free API
+    try {
+      const res2 = await fetch('https://api.metals.dev/v1/latest?api_key=demo&currency=USD&unit=toz');
+      if (res2.ok) {
+        const m = await res2.json();
+        if (m.metals?.gold) document.getElementById('price-gold').textContent = '$' + Math.round(m.metals.gold).toLocaleString();
+        if (m.metals?.silver) document.getElementById('price-silver').textContent = '$' + m.metals.silver.toFixed(2);
+      }
+    } catch (_) {}
+    // BTC fallback
+    try {
+      const res3 = await fetch('https://api.coinbase.com/v2/prices/BTC-USD/spot');
+      if (res3.ok) {
+        const cb = await res3.json();
+        document.getElementById('price-btc').textContent = '$' + Math.round(parseFloat(cb.data.amount)).toLocaleString();
+      }
+    } catch (_) {}
+    document.getElementById('market-time').textContent = '延迟';
+  }
+})();
 </script>
 {{ end }}
