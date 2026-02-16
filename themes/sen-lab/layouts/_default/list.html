@@ -1,51 +1,38 @@
 {{ define "main" }}
-<div class="mb-8">
-  <h1 class="text-2xl font-semibold tracking-tight" style="color: var(--fg);">
-    {{ .Title }}
-  </h1>
+<div class="mb-6">
+  <h1 class="text-xl font-semibold tracking-tight" style="color: var(--fg);">{{ .Title }}</h1>
   {{ with .Description }}
-  <p class="mt-2 text-sm" style="color: var(--fg-muted);">{{ . }}</p>
+  <p class="text-xs font-mono mt-1" style="color: var(--fg-muted);">{{ . }}</p>
   {{ end }}
 </div>
 
-{{/* Group posts by month */}}
 {{ $pages := .Pages }}
 {{ if .IsHome }}{{ $pages = where site.RegularPages "Section" "posts" }}{{ end }}
 
 {{ range $pages.GroupByDate "2006-01" }}
-<div class="mb-10">
-  <h2 class="text-xs font-mono font-medium uppercase tracking-widest mb-4" style="color: var(--fg-muted);">
-    {{ .Key }}
+<div class="mb-8">
+  <h2 class="text-xs font-mono font-medium uppercase tracking-widest mb-3 flex items-center gap-2" style="color: var(--fg-muted);">
+    {{ .Key }} <span class="opacity-50">({{ len .Pages }})</span>
   </h2>
-  <div class="space-y-3">
+  <div class="card divide-y" style="border-color: var(--border);">
     {{ range .Pages }}
-    <a href="{{ .Permalink }}" class="card block px-5 py-4 group">
-      <div class="flex items-start justify-between gap-4">
-        <div class="min-w-0 flex-1">
-          <h3 class="text-sm font-medium group-hover:text-primary transition-colors truncate" style="color: var(--fg);">
-            {{ .Title }}
-          </h3>
-          {{ with .Description }}
-          <p class="text-xs mt-1.5 line-clamp-2" style="color: var(--fg-muted);">{{ . }}</p>
-          {{ end }}
-          {{ with .Params.tags }}
-          <div class="flex flex-wrap gap-1.5 mt-2">
-            {{ range . }}
-            <span class="bg-tag text-xs font-mono px-1.5 py-0.5 rounded">{{ . }}</span>
-            {{ end }}
-          </div>
+    <a href="{{ .Permalink }}" class="flex items-center justify-between gap-3 px-4 py-2.5 group">
+      <div class="min-w-0 flex-1 flex items-center gap-3">
+        <span class="text-sm font-medium truncate group-hover:text-primary transition-colors" style="color: var(--fg);">{{ .Title }}</span>
+        {{ with .Params.tags }}
+        <div class="hidden sm:flex gap-1 shrink-0">
+          {{ range first 3 . }}
+          <span class="bg-tag text-xs font-mono px-1 py-0.5 rounded">{{ . }}</span>
           {{ end }}
         </div>
-        <time class="text-xs font-mono shrink-0 pt-0.5" style="color: var(--fg-muted);" datetime="{{ .Date.Format "2006-01-02" }}">
-          {{ .Date.Format "01-02" }}
-        </time>
+        {{ end }}
       </div>
+      <time class="text-xs font-mono shrink-0" style="color: var(--fg-muted);" datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "01-02" }}</time>
     </a>
     {{ end }}
   </div>
 </div>
 {{ end }}
 
-{{/* Pagination */}}
 {{ template "_internal/pagination.html" . }}
 {{ end }}

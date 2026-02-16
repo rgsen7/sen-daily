@@ -1,10 +1,10 @@
-<footer class="border-t dark:border-border border-gray-200 mt-16">
-  <div class="max-w-5xl mx-auto px-4 sm:px-6 py-8 flex items-center justify-between">
-    <p class="text-xs dark:text-fg-muted text-gray-400 font-mono">
-      © {{ now.Year }} {{ .Site.Title }}
+<footer class="border-t mt-12" style="border-color: var(--border);">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
+    <p class="text-xs font-mono" style="color: var(--fg-muted);">
+      © {{ now.Year }} {{ .Site.Title }} · Powered by Manus AI
     </p>
-    <div class="flex items-center gap-4">
-      <a href="{{ .Site.BaseURL }}index.xml" class="text-xs dark:text-fg-muted text-gray-400 hover:text-accent transition-colors font-mono">RSS</a>
+    <div class="flex items-center gap-3 text-xs font-mono" style="color: var(--fg-muted);">
+      <a href="{{ .Site.BaseURL }}index.xml" class="hover:opacity-70 transition-opacity" style="color: var(--primary);">RSS</a>
     </div>
   </div>
 </footer>

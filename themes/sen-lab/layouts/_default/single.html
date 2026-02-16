@@ -1,50 +1,81 @@
 {{ define "main" }}
-<article class="max-w-article mx-auto">
-  {{/* Header */}}
-  <header class="mb-10">
-    <time class="text-xs font-mono" style="color: var(--fg-muted);" datetime="{{ .Date.Format "2006-01-02" }}">
-      {{ .Date.Format "2006-01-02" }}
-    </time>
-    <h1 class="text-2xl font-semibold tracking-tight mt-2" style="color: var(--fg);">
-      {{ .Title }}
-    </h1>
-    {{ with .Description }}
-    <p class="text-sm mt-3" style="color: var(--fg-muted);">{{ . }}</p>
-    {{ end }}
-    {{ with .Params.tags }}
-    <div class="flex flex-wrap gap-1.5 mt-4">
+<article class="max-w-5xl mx-auto">
+  {{/* ===== Article header — compact ===== */}}
+  <header class="mb-8 pb-6" style="border-bottom: 1px solid var(--border);">
+    <div class="flex items-center gap-3 mb-2">
+      <time class="text-xs font-mono" style="color: var(--fg-muted);" datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "2006-01-02" }}</time>
+      {{ with .Params.categories }}
       {{ range . }}
-      <a href="{{ "tags/" | absURL }}{{ . | urlize }}/" class="bg-tag text-xs font-mono px-2 py-0.5 rounded hover:opacity-80 transition-opacity">{{ . }}</a>
+      <span class="text-xs font-mono px-2 py-0.5 rounded" style="background: var(--primary); color: var(--primary-fg);">{{ . }}</span>
+      {{ end }}
+      {{ end }}
+      {{ if .Params.ShowReadingTime }}
+      <span class="text-xs font-mono" style="color: var(--fg-muted);">{{ .ReadingTime }} min</span>
+      {{ end }}
+    </div>
+    <h1 class="text-xl font-semibold tracking-tight leading-snug" style="color: var(--fg);">{{ .Title }}</h1>
+    {{ with .Params.tags }}
+    <div class="flex flex-wrap gap-1.5 mt-3">
+      {{ range . }}
+      <a href="{{ "tags/" | absURL }}{{ . | urlize }}/" class="bg-tag text-xs font-mono px-1.5 py-0.5 rounded hover:opacity-80 transition-opacity">{{ . }}</a>
       {{ end }}
     </div>
     {{ end }}
   </header>
 
-  {{/* Content */}}
-  <div class="article-content" style="color: var(--fg-muted);">
-    {{ .Content }}
+  {{/* ===== Two-column layout for article ===== */}}
+  <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+
+    {{/* Main content — 3/4 */}}
+    <div class="lg:col-span-3">
+      <div class="article-content" style="color: var(--fg-muted);">
+        {{ .Content }}
+      </div>
+    </div>
+
+    {{/* Sidebar TOC — 1/4 (desktop only) */}}
+    <aside class="hidden lg:block">
+      <div class="sticky top-8">
+        <div class="card p-4">
+          <h3 class="text-xs font-mono font-medium uppercase tracking-widest mb-3" style="color: var(--fg-muted);">目录</h3>
+          <nav class="space-y-1 text-xs" style="color: var(--fg-muted);">
+            {{ .TableOfContents }}
+          </nav>
+        </div>
+
+        {{/* Quick stats extracted from tags */}}
+        {{ with .Params.tags }}
+        <div class="card p-4 mt-4">
+          <h3 class="text-xs font-mono font-medium uppercase tracking-widest mb-3" style="color: var(--fg-muted);">本期标签</h3>
+          <div class="flex flex-wrap gap-1">
+            {{ range . }}
+            <span class="bg-tag text-xs font-mono px-1.5 py-0.5 rounded">{{ . }}</span>
+            {{ end }}
+          </div>
+        </div>
+        {{ end }}
+      </div>
+    </aside>
   </div>
 
-  {{/* Footer nav */}}
-  <nav class="border-t mt-16 pt-8" style="border-color: var(--border);">
-    <div class="flex justify-between gap-4">
-      {{ with .PrevInSection }}
-      <a href="{{ .Permalink }}" class="group flex-1 min-w-0">
-        <span class="text-xs font-mono uppercase tracking-wide" style="color: var(--fg-muted);">← 上一篇</span>
-        <p class="text-sm font-medium mt-1 truncate group-hover:text-primary transition-colors" style="color: var(--fg);">{{ .Title }}</p>
-      </a>
-      {{ else }}<div class="flex-1"></div>{{ end }}
+  {{/* ===== Prev/Next navigation ===== */}}
+  <nav class="mt-12 pt-6 grid grid-cols-1 sm:grid-cols-2 gap-3" style="border-top: 1px solid var(--border);">
+    {{ with .PrevInSection }}
+    <a href="{{ .Permalink }}" class="card px-4 py-3 group">
+      <span class="text-xs font-mono" style="color: var(--fg-muted);">← 上一期</span>
+      <p class="text-sm font-medium mt-1 truncate group-hover:text-primary transition-colors" style="color: var(--fg);">{{ .Title }}</p>
+    </a>
+    {{ else }}<div></div>{{ end }}
 
-      {{ with .NextInSection }}
-      <a href="{{ .Permalink }}" class="group flex-1 min-w-0 text-right">
-        <span class="text-xs font-mono uppercase tracking-wide" style="color: var(--fg-muted);">下一篇 →</span>
-        <p class="text-sm font-medium mt-1 truncate group-hover:text-primary transition-colors" style="color: var(--fg);">{{ .Title }}</p>
-      </a>
-      {{ else }}<div class="flex-1"></div>{{ end }}
-    </div>
+    {{ with .NextInSection }}
+    <a href="{{ .Permalink }}" class="card px-4 py-3 group text-right">
+      <span class="text-xs font-mono" style="color: var(--fg-muted);">下一期 →</span>
+      <p class="text-sm font-medium mt-1 truncate group-hover:text-primary transition-colors" style="color: var(--fg);">{{ .Title }}</p>
+    </a>
+    {{ else }}<div></div>{{ end }}
   </nav>
 
-  {{/* Giscus comments */}}
+  {{/* ===== Giscus comments ===== */}}
   {{ if .Site.Params.giscus.repo }}
   <div class="mt-12" id="comments">
     <script src="https://giscus.app/client.js"

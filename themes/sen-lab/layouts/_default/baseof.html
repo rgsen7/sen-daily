@@ -90,20 +90,34 @@
     .border-theme { border-color: var(--border); }
     .bg-tag { background: var(--tag-bg); color: var(--tag-fg); }
 
-    /* === Article content === */
-    .article-content h2 { font-size: 1.25rem; font-weight: 600; margin-top: 2.5rem; margin-bottom: 1rem; color: var(--fg); }
-    .article-content h3 { font-size: 1.1rem; font-weight: 600; margin-top: 2rem; margin-bottom: 0.75rem; color: var(--fg); }
-    .article-content p { margin-bottom: 1rem; line-height: 1.75; }
-    .article-content ul { list-style: disc; padding-left: 1.5rem; margin-bottom: 1rem; }
-    .article-content li { margin-bottom: 0.5rem; line-height: 1.7; }
+    /* === Article content — dense, research-report style === */
+    .article-content h2 { font-size: 1.1rem; font-weight: 600; margin-top: 2rem; margin-bottom: 0.75rem; color: var(--fg); padding-bottom: 0.4rem; border-bottom: 1px solid var(--border); }
+    .article-content h3 { font-size: 0.95rem; font-weight: 600; margin-top: 1.5rem; margin-bottom: 0.5rem; color: var(--fg); }
+    .article-content p { margin-bottom: 0.75rem; line-height: 1.7; font-size: 0.9rem; }
+    .article-content ul { list-style: none; padding-left: 0; margin-bottom: 0.75rem; }
+    .article-content li { margin-bottom: 0.4rem; line-height: 1.65; font-size: 0.9rem; padding-left: 1rem; position: relative; }
+    .article-content li::before { content: "·"; position: absolute; left: 0; color: var(--primary); font-weight: bold; }
     .article-content a { color: var(--primary); text-decoration: none; border-bottom: 1px solid transparent; transition: border-color 0.15s; }
     .article-content a:hover { border-bottom-color: var(--primary); }
     .article-content strong { color: var(--fg); font-weight: 600; }
-    .article-content hr { border: none; border-top: 1px solid var(--border); margin: 2rem 0; }
-    .article-content blockquote { border-left: 2px solid var(--primary); padding-left: 1rem; color: var(--fg-muted); margin: 1.5rem 0; }
-    .article-content code { font-family: 'JetBrains Mono', monospace; font-size: 0.875rem; background: var(--muted); padding: 0.15rem 0.4rem; border-radius: 3px; }
-    .article-content pre { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem; overflow-x: auto; margin: 1.5rem 0; }
+    .article-content hr { border: none; border-top: 1px solid var(--border); margin: 1.5rem 0; }
+    .article-content blockquote { border-left: 2px solid var(--primary); padding: 0.5rem 1rem; color: var(--fg-muted); margin: 1rem 0; background: var(--muted); border-radius: 0 var(--radius) var(--radius) 0; font-size: 0.875rem; }
+    .article-content code { font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; background: var(--muted); padding: 0.1rem 0.35rem; border-radius: 3px; }
+    .article-content pre { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 0.75rem; overflow-x: auto; margin: 1rem 0; font-size: 0.8rem; }
     .article-content pre code { background: none; padding: 0; }
+    .article-content em { font-size: 0.85rem; }
+
+    /* TOC sidebar styling */
+    #TableOfContents { font-size: 0.75rem; }
+    #TableOfContents ul { list-style: none; padding-left: 0; margin: 0; }
+    #TableOfContents li { margin-bottom: 0.35rem; }
+    #TableOfContents a { color: var(--fg-muted); text-decoration: none; transition: color 0.15s; display: block; padding: 0.15rem 0; }
+    #TableOfContents a:hover { color: var(--primary); }
+    #TableOfContents ul ul { padding-left: 0.75rem; margin-top: 0.25rem; }
+
+    /* Line clamp utility */
+    .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .line-clamp-3 { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
 
     /* === Card component === */
     .card {
@@ -132,7 +146,7 @@
   
   {{ partial "header.html" . }}
   
-  <main class="max-w-5xl mx-auto px-4 sm:px-6 py-8">
+  <main class="max-w-6xl mx-auto px-4 sm:px-6 py-6">
     {{ block "main" . }}{{ end }}
   </main>
 
