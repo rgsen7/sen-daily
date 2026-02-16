@@ -1,9 +1,15 @@
 {{ define "main" }}
 <article>
-  <header class="mb-8">
+  <header class="mb-10">
     <h1 class="text-2xl font-extrabold leading-tight" style="color: var(--fg);">{{ .Title }}</h1>
-    <div class="flex items-center gap-3 mt-3">
+    <div class="flex flex-wrap items-center gap-3 mt-3">
       <time class="text-sm font-mono" style="color: var(--fg-secondary);">{{ .Date.Format "2006-01-02" }}</time>
+      {{ if .Site.Params.ShowReadingTime }}
+      <span class="text-xs font-mono px-2 py-0.5 rounded" style="background: var(--code-bg); color: var(--fg-secondary);">{{ .ReadingTime }} 分钟</span>
+      {{ end }}
+      {{ if .Site.Params.ShowWordCount }}
+      <span class="text-xs font-mono" style="color: var(--fg-secondary);">{{ .WordCount }} 字</span>
+      {{ end }}
       {{ with .Params.categories }}{{ range . }}
       <span class="text-xs font-mono px-2 py-0.5 rounded" style="background: var(--code-bg); color: var(--fg-secondary);">{{ . }}</span>
       {{ end }}{{ end }}
@@ -19,8 +25,8 @@
 
   {{/* TOC */}}
   {{ if .Params.showtoc | default .Site.Params.showtoc }}
-  <details class="mb-8 p-4 rounded-lg" style="background: var(--entry); border: 1px solid var(--border);" open>
-    <summary class="text-sm font-bold cursor-pointer" style="color: var(--fg);">目录</summary>
+  <details class="mb-10 p-5 rounded-lg" style="background: var(--entry); border: 1px solid var(--border);" open>
+    <summary class="text-sm font-bold cursor-pointer select-none" style="color: var(--fg);">目录</summary>
     <nav class="mt-3">
       {{ .TableOfContents }}
     </nav>
@@ -31,18 +37,24 @@
     {{ .Content }}
   </div>
 
+  {{/* Share / Back to top */}}
+  <div class="mt-10 pt-6 flex items-center justify-between" style="border-top: 1px solid var(--border);">
+    <a href="{{ .Site.BaseURL }}" class="text-sm font-mono hover:opacity-70 transition-opacity" style="color: var(--fg-secondary);">← 全部日报</a>
+    <button onclick="window.scrollTo({top:0,behavior:'smooth'})" class="text-sm font-mono hover:opacity-70 transition-opacity" style="color: var(--fg-secondary);">↑ 回到顶部</button>
+  </div>
+
   {{/* Prev/Next */}}
-  <nav class="mt-12 pt-6 grid grid-cols-1 sm:grid-cols-2 gap-3" style="border-top: 1px solid var(--border);">
+  <nav class="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-3">
     {{ with .PrevInSection }}
-    <a href="{{ .Permalink }}" class="post-entry group">
+    <a href="{{ .Permalink }}" class="post-entry">
       <span class="text-xs font-mono" style="color: var(--fg-secondary);">← 上一期</span>
-      <p class="text-base font-bold mt-1 truncate group-hover:opacity-70 transition-opacity" style="color: var(--fg);">{{ .Title }}</p>
+      <p class="text-sm font-bold mt-1 truncate" style="color: var(--fg);">{{ .Title }}</p>
     </a>
     {{ else }}<div></div>{{ end }}
     {{ with .NextInSection }}
-    <a href="{{ .Permalink }}" class="post-entry group text-right">
+    <a href="{{ .Permalink }}" class="post-entry text-right">
       <span class="text-xs font-mono" style="color: var(--fg-secondary);">下一期 →</span>
-      <p class="text-base font-bold mt-1 truncate group-hover:opacity-70 transition-opacity" style="color: var(--fg);">{{ .Title }}</p>
+      <p class="text-sm font-bold mt-1 truncate" style="color: var(--fg);">{{ .Title }}</p>
     </a>
     {{ else }}<div></div>{{ end }}
   </nav>
@@ -60,7 +72,26 @@
       data-reactions-enabled="{{ .Site.Params.giscus.reactionsEnabled }}"
       data-emit-metadata="0"
       data-input-position="top"
-      data-theme="dark"
+      data-theme="preferred_color_scheme"
+      data-lang="zh-CN"
+      data-loading="lazy"
+      crossorigin="anonymous"
+      async>
+    </script>
+  </div>
+  {{ else if .Site.Params.comments }}
+  <div class="mt-12" id="comments">
+    <script src="https://giscus.app/client.js"
+      data-repo="rgsen7/sen-daily"
+      data-repo-id="R_kgDORQ0bGA"
+      data-category="Announcements"
+      data-category-id="DIC_kwDORQ0bGM4CpVqH"
+      data-mapping="pathname"
+      data-strict="0"
+      data-reactions-enabled="1"
+      data-emit-metadata="0"
+      data-input-position="top"
+      data-theme="preferred_color_scheme"
       data-lang="zh-CN"
       data-loading="lazy"
       crossorigin="anonymous"

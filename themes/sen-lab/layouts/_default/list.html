@@ -1,6 +1,9 @@
 {{ define "main" }}
 <div class="mb-6">
   <h1 class="text-2xl font-extrabold" style="color: var(--fg);">{{ .Title }}</h1>
+  {{ if .Data.Singular }}
+  <p class="text-sm mt-2" style="color: var(--fg-secondary);">{{ len .Pages }} 篇文章</p>
+  {{ end }}
 </div>
 
 {{ $pages := .Pages }}
@@ -10,9 +13,14 @@
 <div class="mb-8">
   <h2 class="text-sm font-mono font-semibold uppercase tracking-wider mb-3" style="color: var(--fg-secondary);">{{ .Key }}</h2>
   {{ range .Pages }}
-  <a href="{{ .Permalink }}" class="post-entry block group">
-    <div class="flex items-center justify-between gap-4">
-      <h3 class="text-base font-bold truncate group-hover:opacity-70 transition-opacity" style="color: var(--fg);">{{ .Title }}</h3>
+  <a href="{{ .Permalink }}" class="post-entry block">
+    <div class="flex items-start justify-between gap-4">
+      <div class="min-w-0 flex-1">
+        <h3 class="text-base font-bold" style="color: var(--fg);">{{ .Title }}</h3>
+        {{ with .Params.summary }}
+        <p class="text-sm mt-1 line-clamp-2" style="color: var(--fg-secondary);">{{ . }}</p>
+        {{ end }}
+      </div>
       <time class="text-xs font-mono shrink-0" style="color: var(--fg-secondary);">{{ .Date.Format "01-02" }}</time>
     </div>
   </a>

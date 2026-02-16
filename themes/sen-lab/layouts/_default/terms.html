@@ -1,11 +1,13 @@
 {{ define "main" }}
-<div class="mb-6">
+<div class="mb-8">
   <h1 class="text-2xl font-extrabold" style="color: var(--fg);">标签</h1>
+  <p class="text-sm mt-2" style="color: var(--fg-secondary);">共 {{ len .Site.Taxonomies.tags }} 个标签</p>
 </div>
 <div class="flex flex-wrap gap-2">
   {{ range .Site.Taxonomies.tags.ByCount }}
-  <a href="{{ .Page.Permalink }}" class="text-sm font-mono px-3 py-1.5 rounded hover:opacity-70 transition-opacity" style="background: var(--entry); border: 1px solid var(--border); color: var(--fg);">
-    {{ .Page.Title }} <span style="color: var(--fg-secondary);">{{ .Count }}</span>
+  <a href="{{ .Page.Permalink }}" class="flex items-center gap-2 text-sm font-mono px-3 py-2 rounded-lg transition-all" style="background: var(--entry); border: 1px solid var(--border); color: var(--fg);" onmouseover="this.style.borderColor='var(--fg-secondary)'" onmouseout="this.style.borderColor='var(--border)'">
+    <span>{{ .Page.Title }}</span>
+    <span class="text-xs px-1.5 py-0.5 rounded" style="background: var(--code-bg); color: var(--fg-secondary);">{{ .Count }}</span>
   </a>
   {{ end }}
 </div>

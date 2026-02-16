@@ -1,30 +1,21 @@
 {{ define "main" }}
-<div>
-  <h1 class="text-lg font-semibold dark:text-fg text-fg-light tracking-tight mb-6">时间线</h1>
-  
-  {{ $pages := where .Site.RegularPages "Type" "posts" }}
-  {{ $grouped := $pages.GroupByDate "2006-01" }}
-  
-  <div class="space-y-8">
-    {{ range $grouped }}
-    <div>
-      <h2 class="text-xs font-mono dark:text-accent text-accent-dim font-medium mb-3 uppercase tracking-wider">
-        {{ .Key }}
-      </h2>
-      <div class="space-y-1 border-l dark:border-border border-gray-200 pl-4 ml-1">
-        {{ range .Pages }}
-        <a href="{{ .Permalink }}" class="group flex items-baseline gap-3 py-2 hover:dark:bg-white/[0.02] -mx-2 px-2 rounded transition-colors">
-          <time class="text-[11px] font-mono dark:text-fg-muted text-gray-400 shrink-0 tabular-nums">
-            {{ .Date.Format "02" }}
-          </time>
-          <span class="text-sm dark:text-fg-muted text-gray-600 group-hover:dark:text-fg group-hover:text-fg-light transition-colors">
-            {{ .Title }}
-          </span>
-        </a>
-        {{ end }}
-      </div>
-    </div>
-    {{ end }}
-  </div>
+{{/* Redirect to page/archives.html — this is the fallback */}}
+<div class="mb-6">
+  <h1 class="text-2xl font-extrabold" style="color: var(--fg);">时间线</h1>
 </div>
+
+{{ $posts := where site.RegularPages "Section" "posts" }}
+{{ range $posts.GroupByDate "2006-01" }}
+<div class="mb-8">
+  <h2 class="text-sm font-mono font-semibold uppercase tracking-wider mb-3" style="color: var(--fg-secondary);">{{ .Key }}</h2>
+  {{ range .Pages }}
+  <a href="{{ .Permalink }}" class="post-entry block">
+    <div class="flex items-center justify-between gap-4">
+      <h3 class="text-base font-bold truncate" style="color: var(--fg);">{{ .Title }}</h3>
+      <time class="text-xs font-mono shrink-0" style="color: var(--fg-secondary);">{{ .Date.Format "01-02" }}</time>
+    </div>
+  </a>
+  {{ end }}
+</div>
+{{ end }}
 {{ end }}

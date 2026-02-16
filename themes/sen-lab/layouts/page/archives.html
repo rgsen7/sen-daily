@@ -1,19 +1,25 @@
 {{ define "main" }}
 <div class="mb-6">
   <h1 class="text-2xl font-extrabold" style="color: var(--fg);">时间线</h1>
+  <p class="text-sm mt-2" style="color: var(--fg-secondary);">共 {{ len (where site.RegularPages "Section" "posts") }} 期</p>
 </div>
 
 {{ $posts := where site.RegularPages "Section" "posts" }}
 {{ range $posts.GroupByDate "2006-01" }}
-<div class="mb-8">
+<div class="mb-10">
   <h2 class="text-sm font-mono font-semibold uppercase tracking-wider mb-3 flex items-center gap-2" style="color: var(--fg-secondary);">
     {{ .Key }} <span style="opacity: 0.5;">({{ len .Pages }})</span>
   </h2>
   <div style="border-left: 2px solid var(--border); padding-left: 1.25rem; margin-left: 0.25rem;">
     {{ range .Pages }}
-    <a href="{{ .Permalink }}" class="flex items-center gap-4 py-2 group">
-      <time class="text-sm font-mono shrink-0 w-12" style="color: var(--fg-secondary);">{{ .Date.Format "01-02" }}</time>
-      <span class="text-base font-medium group-hover:opacity-70 transition-opacity" style="color: var(--fg);">{{ .Title }}</span>
+    <a href="{{ .Permalink }}" class="flex items-start gap-4 py-3 group" style="border-bottom: 1px solid var(--border);">
+      <time class="text-sm font-mono shrink-0 w-12 pt-0.5" style="color: var(--fg-secondary);">{{ .Date.Format "01-02" }}</time>
+      <div class="min-w-0 flex-1">
+        <span class="text-base font-semibold group-hover:opacity-70 transition-opacity" style="color: var(--fg);">{{ .Title }}</span>
+        {{ with .Params.summary }}
+        <p class="text-xs mt-1 line-clamp-1" style="color: var(--fg-secondary);">{{ . }}</p>
+        {{ end }}
+      </div>
     </a>
     {{ end }}
   </div>
