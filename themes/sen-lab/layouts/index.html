@@ -4,57 +4,60 @@
 {{ $recent := after 1 (first 7 $posts) }}
 {{ $older := after 7 $posts }}
 
-{{/* ===== Header line ===== */}}
-<div class="flex items-baseline justify-between mb-5">
+{{/* ===== Header ===== */}}
+<div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3 mb-8">
   <div>
-    <h1 class="text-lg font-semibold tracking-tight" style="color: var(--fg);">{{ .Site.Title }}</h1>
-    <p class="text-xs mt-0.5" style="color: var(--fg-muted);">{{ .Site.Params.description }}</p>
+    <h1 class="text-3xl font-extrabold tracking-tight" style="color: var(--fg);">{{ .Site.Title }}</h1>
+    <p class="text-base mt-1" style="color: var(--fg-muted);">{{ .Site.Params.description }}</p>
   </div>
-  <span class="text-xs font-mono hidden sm:block" style="color: var(--fg-muted);">共 {{ len $posts }} 期</span>
+  <div class="flex items-center gap-3">
+    <span class="section-label">共 {{ len $posts }} 期</span>
+    <a href="{{ .Site.BaseURL }}index.xml" class="text-sm font-medium hover:opacity-70 transition-opacity" style="color: var(--primary);">📡 RSS</a>
+  </div>
 </div>
 
-{{/* ===== Grid: main + sidebar ===== */}}
-<div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+{{/* ===== Grid ===== */}}
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
 
-  {{/* ===== Main column (8/12) ===== */}}
-  <div class="lg:col-span-8 space-y-4">
+  {{/* Main (8/12) */}}
+  <div class="lg:col-span-8 space-y-5">
 
-    {{/* Latest issue — featured card */}}
+    {{/* Latest — featured */}}
     {{ range $latest }}
-    <a href="{{ .Permalink }}" class="card block p-5 group">
-      <div class="flex items-center gap-2 mb-2">
-        <span class="text-xs font-mono font-medium px-1.5 py-0.5 rounded" style="background: var(--primary); color: var(--primary-fg);">最新一期</span>
-        <time class="text-xs font-mono" style="color: var(--fg-muted);" datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "2006-01-02" }}</time>
+    <a href="{{ .Permalink }}" class="card card-featured block p-6 group">
+      <div class="flex items-center gap-3 mb-3">
+        <span class="text-xs font-mono font-bold px-2 py-1 rounded" style="background: var(--primary); color: var(--primary-fg);">最新一期</span>
+        <time class="text-sm font-mono" style="color: var(--fg-muted);" datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "2006-01-02" }}</time>
       </div>
-      <h2 class="text-base font-semibold leading-snug group-hover:text-primary transition-colors" style="color: var(--fg);">{{ .Title }}</h2>
+      <h2 class="text-xl font-bold leading-snug group-hover:text-primary transition-colors" style="color: var(--fg);">{{ .Title }}</h2>
       {{ with .Params.summary }}
-      <p class="text-xs mt-2 leading-relaxed line-clamp-3" style="color: var(--fg-muted);">{{ . }}</p>
+      <p class="text-sm mt-3 leading-relaxed line-clamp-3" style="color: var(--fg-muted);">{{ . }}</p>
       {{ end }}
       {{ with .Params.tags }}
-      <div class="flex flex-wrap gap-1 mt-3">
+      <div class="flex flex-wrap gap-1.5 mt-4">
         {{ range first 5 . }}
-        <span class="bg-tag text-xs font-mono px-1.5 py-0.5 rounded">{{ . }}</span>
+        <span class="bg-tag text-xs font-mono font-medium px-2 py-0.5 rounded">{{ . }}</span>
         {{ end }}
       </div>
       {{ end }}
     </a>
     {{ end }}
 
-    {{/* Recent issues — compact list inside card */}}
+    {{/* Recent list */}}
     {{ if $recent }}
     <div class="card">
-      <div class="px-4 py-2.5 border-b" style="border-color: var(--border);">
-        <h3 class="text-xs font-mono font-medium uppercase tracking-widest" style="color: var(--fg-muted);">近期日报</h3>
+      <div class="px-5 py-3 border-b" style="border-color: var(--border);">
+        <h3 class="section-label">往期日报</h3>
       </div>
       <div class="divide-y" style="border-color: var(--border);">
         {{ range $recent }}
-        <a href="{{ .Permalink }}" class="flex items-center gap-3 px-4 py-2.5 group">
-          <time class="text-xs font-mono shrink-0 w-14" style="color: var(--fg-muted);" datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "01-02" }}</time>
-          <span class="text-sm font-medium truncate group-hover:text-primary transition-colors" style="color: var(--fg);">{{ .Title }}</span>
+        <a href="{{ .Permalink }}" class="flex items-center gap-4 px-5 py-3.5 group">
+          <time class="text-sm font-mono shrink-0 w-16" style="color: var(--fg-muted);" datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "01-02" }}</time>
+          <span class="text-base font-medium truncate group-hover:text-primary transition-colors" style="color: var(--fg);">{{ .Title }}</span>
           {{ with .Params.tags }}
-          <div class="hidden md:flex gap-1 shrink-0 ml-auto">
+          <div class="hidden md:flex gap-1.5 shrink-0 ml-auto">
             {{ range first 2 . }}
-            <span class="bg-tag text-xs font-mono px-1 py-0.5 rounded">{{ . }}</span>
+            <span class="bg-tag text-xs font-mono px-1.5 py-0.5 rounded">{{ . }}</span>
             {{ end }}
           </div>
           {{ end }}
@@ -62,36 +65,36 @@
         {{ end }}
       </div>
       {{ if $older }}
-      <div class="px-4 py-2.5 border-t" style="border-color: var(--border);">
-        <a href="{{ .Site.BaseURL }}archives/" class="text-xs font-mono hover:opacity-70 transition-opacity" style="color: var(--primary);">查看全部 {{ len $posts }} 期 →</a>
+      <div class="px-5 py-3 border-t" style="border-color: var(--border);">
+        <a href="{{ .Site.BaseURL }}archives/" class="text-sm font-medium hover:opacity-70 transition-opacity" style="color: var(--primary);">查看全部 {{ len $posts }} 期 →</a>
       </div>
       {{ end }}
     </div>
     {{ end }}
   </div>
 
-  {{/* ===== Sidebar (4/12) ===== */}}
-  <div class="lg:col-span-4 space-y-4">
+  {{/* Sidebar (4/12) */}}
+  <div class="lg:col-span-4 space-y-5">
 
     {{/* About */}}
-    <div class="card p-4">
-      <h3 class="text-xs font-mono font-medium uppercase tracking-widest mb-2" style="color: var(--fg-muted);">关于</h3>
-      <p class="text-xs leading-relaxed" style="color: var(--fg-muted);">
+    <div class="card p-5">
+      <h3 class="section-label mb-3">关于</h3>
+      <p class="text-sm leading-relaxed" style="color: var(--fg-muted);">
         每日追踪 AI 行业动态——融资、产品、技术突破、政策变化。由 Manus AI 生成，森 编辑审核。
       </p>
-      <div class="flex gap-3 mt-3 text-xs font-mono">
-        <a href="{{ .Site.BaseURL }}index.xml" class="hover:opacity-70 transition-opacity" style="color: var(--primary);">📡 RSS</a>
-        <a href="{{ .Site.BaseURL }}archives/" class="hover:opacity-70 transition-opacity" style="color: var(--primary);">时间线</a>
+      <div class="flex gap-4 mt-4">
+        <a href="{{ .Site.BaseURL }}index.xml" class="text-sm font-medium hover:opacity-70 transition-opacity" style="color: var(--primary);">📡 RSS</a>
+        <a href="{{ .Site.BaseURL }}archives/" class="text-sm font-medium hover:opacity-70 transition-opacity" style="color: var(--primary);">时间线</a>
       </div>
     </div>
 
     {{/* Tags */}}
     {{ if .Site.Taxonomies.tags }}
-    <div class="card p-4">
-      <h3 class="text-xs font-mono font-medium uppercase tracking-widest mb-2" style="color: var(--fg-muted);">标签</h3>
-      <div class="flex flex-wrap gap-1.5">
+    <div class="card p-5">
+      <h3 class="section-label mb-3">标签</h3>
+      <div class="flex flex-wrap gap-2">
         {{ range .Site.Taxonomies.tags.ByCount }}
-        <a href="{{ .Page.Permalink }}" class="bg-tag text-xs font-mono px-1.5 py-0.5 rounded hover:opacity-80 transition-opacity">
+        <a href="{{ .Page.Permalink }}" class="bg-tag text-sm font-mono px-2 py-0.5 rounded hover:opacity-80 transition-opacity">
           {{ .Page.Title }}
         </a>
         {{ end }}
@@ -99,16 +102,16 @@
     </div>
     {{ end }}
 
-    {{/* Quick links / nav */}}
-    <div class="card p-4">
-      <h3 class="text-xs font-mono font-medium uppercase tracking-widest mb-2" style="color: var(--fg-muted);">板块说明</h3>
-      <div class="space-y-1.5 text-xs" style="color: var(--fg-muted);">
-        <div class="flex items-center gap-2"><span>⚡</span><span>今日速览 — 5 条核心新闻</span></div>
-        <div class="flex items-center gap-2"><span>📰</span><span>头条深读 — 当日最重要事件</span></div>
-        <div class="flex items-center gap-2"><span>🔭</span><span>赛道扫描 — 细分领域动态</span></div>
-        <div class="flex items-center gap-2"><span>🛠️</span><span>工具雷达 — 新工具推荐</span></div>
-        <div class="flex items-center gap-2"><span>📊</span><span>数据看板 — 关键行业指标</span></div>
-        <div class="flex items-center gap-2"><span>🌲</span><span>森说 — 编者独家评论</span></div>
+    {{/* Sections guide */}}
+    <div class="card p-5">
+      <h3 class="section-label mb-3">板块说明</h3>
+      <div class="space-y-2 text-sm" style="color: var(--fg-muted);">
+        <div class="flex items-center gap-2.5"><span>⚡</span><span>今日速览 — 5 条核心新闻</span></div>
+        <div class="flex items-center gap-2.5"><span>📰</span><span>头条深读 — 当日最重要事件</span></div>
+        <div class="flex items-center gap-2.5"><span>🔭</span><span>赛道扫描 — 细分领域动态</span></div>
+        <div class="flex items-center gap-2.5"><span>🛠️</span><span>工具雷达 — 新工具推荐</span></div>
+        <div class="flex items-center gap-2.5"><span>📊</span><span>数据看板 — 关键行业指标</span></div>
+        <div class="flex items-center gap-2.5"><span>🌲</span><span>森说 — 编者独家评论</span></div>
       </div>
     </div>
   </div>

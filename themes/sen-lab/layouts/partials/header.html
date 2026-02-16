@@ -1,27 +1,27 @@
-<header class="border-b border-theme">
-  <nav class="max-w-6xl mx-auto px-4 sm:px-6 h-12 flex items-center justify-between">
-    {{/* Logo — compact */}}
-    <a href="{{ .Site.BaseURL }}" class="flex items-center gap-1.5 text-fg font-semibold text-sm tracking-tight hover:opacity-80 transition-opacity">
-      <span class="font-mono text-xs" style="color: var(--primary);">◆</span>
-      <span style="color: var(--fg);">{{ .Site.Title }}</span>
+<header class="site-header">
+  <nav class="max-w-6xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
+    {{/* Logo — bold */}}
+    <a href="{{ .Site.BaseURL }}" class="flex items-center gap-2 hover:opacity-80 transition-opacity">
+      <span class="font-mono text-sm font-bold" style="color: var(--primary-light);">◆</span>
+      <span class="font-bold text-base tracking-tight" style="color: var(--header-fg);">{{ .Site.Title }}</span>
     </a>
 
-    {{/* Nav — tighter */}}
-    <div class="flex items-center gap-4">
+    {{/* Nav */}}
+    <div class="flex items-center gap-5">
       {{ range .Site.Menus.main }}
       <a href="{{ .URL | absURL }}" 
-         class="text-xs font-mono hover:text-primary transition-colors"
-         style="color: var(--fg-muted);">
+         class="text-sm font-medium transition-colors hover:opacity-70"
+         style="color: rgba(255,255,255,0.6);">
         {{ .Name }}
       </a>
       {{ end }}
 
       {{/* Theme toggle */}}
       <button onclick="toggleTheme()" 
-              class="hover:opacity-70 transition-opacity ml-2"
-              style="color: var(--fg-muted);"
+              class="hover:opacity-70 transition-opacity ml-1"
+              style="color: rgba(255,255,255,0.5);"
               aria-label="切换主题">
-        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
         </svg>
       </button>
