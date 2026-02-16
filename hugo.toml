@@ -34,7 +34,7 @@ buildExpired = false
 
   [params.homeInfoParams]
     Title = "森之日报"
-    Content = """每日追踪 AI 行业融资、产品、技术突破，附独家解读。
+    Content = """每日追踪 AI 行业动态：速览 · 深读 · 赛道扫描 · 工具推荐 · 数据看板 · 编者评论
 
 📡 [订阅 RSS](/sen-daily/index.xml) · 每天早上自动更新"""
 
