@@ -20,58 +20,105 @@
       darkMode: 'class',
       theme: {
         extend: {
-          colors: {
-            bg: { DEFAULT: '#0a0a0a', light: '#fafafa' },
-            fg: { DEFAULT: '#e5e5e5', muted: '#737373', light: '#171717' },
-            accent: { DEFAULT: '#38bdf8', dim: '#0c4a6e' },
-            border: { DEFAULT: 'rgba(255,255,255,0.06)' }
-          },
           fontFamily: {
             sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
             mono: ['JetBrains Mono', 'Fira Code', 'monospace']
           },
           maxWidth: {
             article: '720px'
+          },
+          borderRadius: {
+            DEFAULT: '0.5rem'
           }
         }
       }
     }
   </script>
 
-  {{/* Custom styles */}}
+  {{/* Custom styles — oklch color system from shadcn/21st.dev */}}
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+    /* === Theme Variables (shadcn/oklch) === */
+    :root {
+      --bg: oklch(0.99 0 0);
+      --fg: oklch(0.145 0 0);
+      --fg-muted: oklch(0.556 0 0);
+      --card: oklch(1 0 0);
+      --card-fg: oklch(0.145 0 0);
+      --muted: oklch(0.97 0 0);
+      --border: oklch(0.922 0 0);
+      --primary: oklch(0.55 0.12 250);
+      --primary-fg: oklch(0.99 0 0);
+      --tag-bg: oklch(0.95 0.02 250);
+      --tag-fg: oklch(0.4 0.08 250);
+      --stat-up: oklch(0.65 0.18 145);
+      --stat-down: oklch(0.65 0.18 25);
+      --radius: 0.5rem;
+    }
+    .dark {
+      --bg: oklch(0.12 0 0);
+      --fg: oklch(0.95 0 0);
+      --fg-muted: oklch(0.55 0 0);
+      --card: oklch(0.17 0 0);
+      --card-fg: oklch(0.95 0 0);
+      --muted: oklch(0.22 0 0);
+      --border: oklch(1 0 0 / 8%);
+      --primary: oklch(0.7 0.12 250);
+      --primary-fg: oklch(0.12 0 0);
+      --tag-bg: oklch(0.2 0.02 250);
+      --tag-fg: oklch(0.7 0.08 250);
+    }
+
+    /* === Base === */
+    html { background: var(--bg); color: var(--fg-muted); }
+    .dark html, html.dark { background: var(--bg); }
+    ::selection { background: oklch(0.55 0.12 250 / 20%); }
     
     /* Scrollbar */
-    ::-webkit-scrollbar { width: 6px; }
-    ::-webkit-scrollbar-track { background: #0a0a0a; }
-    ::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
-    
-    /* Selection */
-    ::selection { background: #38bdf820; }
-    
-    /* Prose overrides for article content */
-    .article-content h2 { font-size: 1.25rem; font-weight: 600; margin-top: 2.5rem; margin-bottom: 1rem; color: #e5e5e5; }
-    .article-content h3 { font-size: 1.1rem; font-weight: 600; margin-top: 2rem; margin-bottom: 0.75rem; color: #e5e5e5; }
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+    /* === Utility classes === */
+    .text-fg { color: var(--fg); }
+    .text-fg-muted { color: var(--fg-muted); }
+    .text-primary { color: var(--primary); }
+    .bg-bg { background: var(--bg); }
+    .bg-card { background: var(--card); }
+    .bg-muted { background: var(--muted); }
+    .border-theme { border-color: var(--border); }
+    .bg-tag { background: var(--tag-bg); color: var(--tag-fg); }
+
+    /* === Article content === */
+    .article-content h2 { font-size: 1.25rem; font-weight: 600; margin-top: 2.5rem; margin-bottom: 1rem; color: var(--fg); }
+    .article-content h3 { font-size: 1.1rem; font-weight: 600; margin-top: 2rem; margin-bottom: 0.75rem; color: var(--fg); }
     .article-content p { margin-bottom: 1rem; line-height: 1.75; }
     .article-content ul { list-style: disc; padding-left: 1.5rem; margin-bottom: 1rem; }
     .article-content li { margin-bottom: 0.5rem; line-height: 1.7; }
-    .article-content a { color: #38bdf8; text-decoration: none; border-bottom: 1px solid transparent; transition: border-color 0.15s; }
-    .article-content a:hover { border-bottom-color: #38bdf8; }
-    .article-content strong { color: #e5e5e5; font-weight: 600; }
-    .article-content hr { border: none; border-top: 1px solid rgba(255,255,255,0.06); margin: 2rem 0; }
-    .article-content blockquote { border-left: 2px solid #38bdf8; padding-left: 1rem; color: #a3a3a3; margin: 1.5rem 0; }
-    .article-content code { font-family: 'JetBrains Mono', monospace; font-size: 0.875rem; background: #1a1a1a; padding: 0.15rem 0.4rem; border-radius: 3px; }
-    .article-content pre { background: #111; border: 1px solid rgba(255,255,255,0.06); border-radius: 6px; padding: 1rem; overflow-x: auto; margin: 1.5rem 0; }
+    .article-content a { color: var(--primary); text-decoration: none; border-bottom: 1px solid transparent; transition: border-color 0.15s; }
+    .article-content a:hover { border-bottom-color: var(--primary); }
+    .article-content strong { color: var(--fg); font-weight: 600; }
+    .article-content hr { border: none; border-top: 1px solid var(--border); margin: 2rem 0; }
+    .article-content blockquote { border-left: 2px solid var(--primary); padding-left: 1rem; color: var(--fg-muted); margin: 1.5rem 0; }
+    .article-content code { font-family: 'JetBrains Mono', monospace; font-size: 0.875rem; background: var(--muted); padding: 0.15rem 0.4rem; border-radius: 3px; }
+    .article-content pre { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem; overflow-x: auto; margin: 1.5rem 0; }
     .article-content pre code { background: none; padding: 0; }
 
-    /* Light mode */
-    html:not(.dark) { background: #fafafa; }
-    html:not(.dark) .article-content h2,
-    html:not(.dark) .article-content h3,
-    html:not(.dark) .article-content strong { color: #171717; }
-    html:not(.dark) .article-content code { background: #f0f0f0; }
-    html:not(.dark) .article-content pre { background: #f5f5f5; border-color: #e5e5e5; }
+    /* === Card component === */
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      transition: border-color 0.15s ease;
+    }
+    .card:hover { border-color: var(--fg-muted); }
+
+    /* === Stat card === */
+    .stat-value { font-size: 1.5rem; font-weight: 700; font-family: 'JetBrains Mono', monospace; color: var(--fg); }
+    .stat-label { font-size: 0.75rem; color: var(--fg-muted); text-transform: uppercase; letter-spacing: 0.05em; }
+    .stat-up { color: var(--stat-up); }
+    .stat-down { color: var(--stat-down); }
   </style>
 
   {{ partial "extend_head.html" . }}
@@ -81,7 +128,7 @@
   <link rel="{{ .Rel }}" type="{{ .MediaType.Type }}" href="{{ .Permalink | safeURL }}">
   {{ end }}
 </head>
-<body class="dark:bg-bg bg-bg-light dark:text-fg-muted text-fg-light font-sans min-h-screen antialiased">
+<body class="bg-bg font-sans min-h-screen antialiased" style="color: var(--fg-muted)">
   
   {{ partial "header.html" . }}
   
