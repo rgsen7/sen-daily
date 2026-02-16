@@ -1,25 +1,19 @@
 {{ define "main" }}
-<div class="mb-8">
-  <h1 class="text-2xl font-semibold tracking-tight" style="color: var(--fg);">时间线</h1>
+<div class="mb-6">
+  <h1 class="text-2xl font-extrabold" style="color: var(--fg);">时间线</h1>
 </div>
 
 {{ $posts := where site.RegularPages "Section" "posts" }}
 {{ range $posts.GroupByDate "2006-01" }}
-<div class="mb-10">
-  <h2 class="text-xs font-mono font-medium uppercase tracking-widest mb-4 flex items-center gap-3" style="color: var(--fg-muted);">
-    <span class="inline-block w-2 h-2 rounded-full" style="background: var(--primary);"></span>
-    {{ .Key }}
-    <span class="text-xs opacity-50">({{ len .Pages }})</span>
+<div class="mb-8">
+  <h2 class="text-sm font-mono font-semibold uppercase tracking-wider mb-3 flex items-center gap-2" style="color: var(--fg-secondary);">
+    {{ .Key }} <span style="opacity: 0.5;">({{ len .Pages }})</span>
   </h2>
-  <div class="space-y-1 ml-4 border-l pl-6" style="border-color: var(--border);">
+  <div style="border-left: 2px solid var(--border); padding-left: 1.25rem; margin-left: 0.25rem;">
     {{ range .Pages }}
     <a href="{{ .Permalink }}" class="flex items-center gap-4 py-2 group">
-      <time class="text-xs font-mono shrink-0 w-12" style="color: var(--fg-muted);" datetime="{{ .Date.Format "2006-01-02" }}">
-        {{ .Date.Format "01-02" }}
-      </time>
-      <span class="text-sm font-medium truncate group-hover:text-primary transition-colors" style="color: var(--fg);">
-        {{ .Title }}
-      </span>
+      <time class="text-sm font-mono shrink-0 w-12" style="color: var(--fg-secondary);">{{ .Date.Format "01-02" }}</time>
+      <span class="text-base font-medium group-hover:opacity-70 transition-opacity" style="color: var(--fg);">{{ .Title }}</span>
     </a>
     {{ end }}
   </div>
