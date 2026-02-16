@@ -1,145 +1,115 @@
 {{ define "main" }}
 {{ $posts := where site.RegularPages "Section" "posts" }}
 {{ $latest := first 1 $posts }}
-{{ $recent := first 6 $posts }}
-{{ $rest := after 1 $posts }}
+{{ $recent := after 1 (first 7 $posts) }}
+{{ $older := after 7 $posts }}
 
-{{/* ===== Top bar: title + stats ===== */}}
-<div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-2 mb-6">
+{{/* ===== Header line ===== */}}
+<div class="flex items-baseline justify-between mb-5">
   <div>
-    <h1 class="text-xl font-semibold tracking-tight" style="color: var(--fg);">{{ .Site.Title }}</h1>
-    <p class="text-xs font-mono mt-1" style="color: var(--fg-muted);">{{ .Site.Params.description }}</p>
+    <h1 class="text-lg font-semibold tracking-tight" style="color: var(--fg);">{{ .Site.Title }}</h1>
+    <p class="text-xs mt-0.5" style="color: var(--fg-muted);">{{ .Site.Params.description }}</p>
   </div>
-  <div class="flex items-center gap-4 text-xs font-mono" style="color: var(--fg-muted);">
-    <span>共 {{ len $posts }} 期</span>
-    <span>·</span>
-    <span>{{ len .Site.Taxonomies.tags }} 标签</span>
-    <a href="{{ .Site.BaseURL }}index.xml" class="hover:opacity-70 transition-opacity" style="color: var(--primary);">📡 RSS</a>
-  </div>
+  <span class="text-xs font-mono hidden sm:block" style="color: var(--fg-muted);">共 {{ len $posts }} 期</span>
 </div>
 
-{{/* ===== Main grid: 2/3 content + 1/3 sidebar ===== */}}
-<div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+{{/* ===== Grid: main + sidebar ===== */}}
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
 
-  {{/* ===== Left column (2/3): Latest issue ===== */}}
-  <div class="lg:col-span-2 space-y-4">
+  {{/* ===== Main column (8/12) ===== */}}
+  <div class="lg:col-span-8 space-y-4">
 
-    {{/* Latest issue — extract sections */}}
+    {{/* Latest issue — featured card */}}
     {{ range $latest }}
     <a href="{{ .Permalink }}" class="card block p-5 group">
-      <div class="flex items-center justify-between mb-3">
-        <div class="flex items-center gap-2">
-          <span class="text-xs font-mono font-medium px-2 py-0.5 rounded" style="background: var(--primary); color: var(--primary-fg);">最新</span>
-          <time class="text-xs font-mono" style="color: var(--fg-muted);" datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "2006-01-02" }}</time>
-        </div>
+      <div class="flex items-center gap-2 mb-2">
+        <span class="text-xs font-mono font-medium px-1.5 py-0.5 rounded" style="background: var(--primary); color: var(--primary-fg);">最新一期</span>
+        <time class="text-xs font-mono" style="color: var(--fg-muted);" datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "2006-01-02" }}</time>
       </div>
-      <h2 class="text-base font-semibold group-hover:text-primary transition-colors leading-snug" style="color: var(--fg);">{{ .Title }}</h2>
+      <h2 class="text-base font-semibold leading-snug group-hover:text-primary transition-colors" style="color: var(--fg);">{{ .Title }}</h2>
       {{ with .Params.summary }}
-      <p class="text-xs mt-2 leading-relaxed line-clamp-2" style="color: var(--fg-muted);">{{ . }}</p>
+      <p class="text-xs mt-2 leading-relaxed line-clamp-3" style="color: var(--fg-muted);">{{ . }}</p>
       {{ end }}
       {{ with .Params.tags }}
       <div class="flex flex-wrap gap-1 mt-3">
-        {{ range first 6 . }}
+        {{ range first 5 . }}
         <span class="bg-tag text-xs font-mono px-1.5 py-0.5 rounded">{{ . }}</span>
         {{ end }}
       </div>
       {{ end }}
     </a>
+    {{ end }}
 
-    {{/* Extract bullet points from 速览 section for cards */}}
-    {{ $content := .RawContent }}
-    {{ $summary := .Params.summary }}
-    {{ if $summary }}
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-      {{/* Speed-read cards — parse from summary or show tags as info cards */}}
-      {{ with .Params.tags }}
-      {{ range first 4 . }}
-      <div class="card px-4 py-3">
-        <span class="text-xs font-mono" style="color: var(--primary);">#{{ . }}</span>
+    {{/* Recent issues — compact list inside card */}}
+    {{ if $recent }}
+    <div class="card">
+      <div class="px-4 py-2.5 border-b" style="border-color: var(--border);">
+        <h3 class="text-xs font-mono font-medium uppercase tracking-widest" style="color: var(--fg-muted);">近期日报</h3>
       </div>
-      {{ end }}
-      {{ end }}
-    </div>
-    {{ end }}
-    {{ end }}
-
-    {{/* ===== Recent issues list ===== */}}
-    <div class="card p-4">
-      <h3 class="text-xs font-mono font-medium uppercase tracking-widest mb-3" style="color: var(--fg-muted);">往期日报</h3>
       <div class="divide-y" style="border-color: var(--border);">
-        {{ range $rest }}
-        <a href="{{ .Permalink }}" class="flex items-center justify-between gap-3 py-2.5 group">
-          <div class="min-w-0 flex-1">
-            <span class="text-sm font-medium truncate block group-hover:text-primary transition-colors" style="color: var(--fg);">{{ .Title }}</span>
+        {{ range $recent }}
+        <a href="{{ .Permalink }}" class="flex items-center gap-3 px-4 py-2.5 group">
+          <time class="text-xs font-mono shrink-0 w-14" style="color: var(--fg-muted);" datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "01-02" }}</time>
+          <span class="text-sm font-medium truncate group-hover:text-primary transition-colors" style="color: var(--fg);">{{ .Title }}</span>
+          {{ with .Params.tags }}
+          <div class="hidden md:flex gap-1 shrink-0 ml-auto">
+            {{ range first 2 . }}
+            <span class="bg-tag text-xs font-mono px-1 py-0.5 rounded">{{ . }}</span>
+            {{ end }}
           </div>
-          <time class="text-xs font-mono shrink-0" style="color: var(--fg-muted);" datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "01-02" }}</time>
+          {{ end }}
         </a>
         {{ end }}
       </div>
+      {{ if $older }}
+      <div class="px-4 py-2.5 border-t" style="border-color: var(--border);">
+        <a href="{{ .Site.BaseURL }}archives/" class="text-xs font-mono hover:opacity-70 transition-opacity" style="color: var(--primary);">查看全部 {{ len $posts }} 期 →</a>
+      </div>
+      {{ end }}
     </div>
+    {{ end }}
   </div>
 
-  {{/* ===== Right column (1/3): Sidebar ===== */}}
-  <div class="space-y-4">
-
-    {{/* Data dashboard card */}}
-    <div class="card p-4">
-      <h3 class="text-xs font-mono font-medium uppercase tracking-widest mb-3" style="color: var(--fg-muted);">数据速览</h3>
-      <div class="space-y-3">
-        <div class="flex items-baseline justify-between">
-          <span class="text-xs" style="color: var(--fg-muted);">本周 AI 融资</span>
-          <span class="text-sm font-mono font-bold" style="color: var(--fg);">$173亿</span>
-        </div>
-        <div class="h-px" style="background: var(--border);"></div>
-        <div class="flex items-baseline justify-between">
-          <span class="text-xs" style="color: var(--fg-muted);">全球 AI 支出预测</span>
-          <span class="text-sm font-mono font-bold" style="color: var(--fg);">$2.52万亿</span>
-        </div>
-        <div class="h-px" style="background: var(--border);"></div>
-        <div class="flex items-baseline justify-between">
-          <span class="text-xs" style="color: var(--fg-muted);">NVIDIA 营收预期</span>
-          <span class="text-sm font-mono font-bold" style="color: var(--fg);">$655.8亿</span>
-        </div>
-      </div>
-      <p class="text-xs font-mono mt-3 opacity-40">数据来源：日报 Vol.042</p>
-    </div>
-
-    {{/* Tags cloud */}}
-    <div class="card p-4">
-      <h3 class="text-xs font-mono font-medium uppercase tracking-widest mb-3" style="color: var(--fg-muted);">热门标签</h3>
-      <div class="flex flex-wrap gap-1.5">
-        {{ range .Site.Taxonomies.tags.ByCount }}
-        {{ if le $.Ordinal 20 }}
-        <a href="{{ .Page.Permalink }}" class="bg-tag text-xs font-mono px-2 py-0.5 rounded hover:opacity-80 transition-opacity">
-          {{ .Page.Title }}<span class="opacity-50 ml-0.5">{{ .Count }}</span>
-        </a>
-        {{ end }}
-        {{ end }}
-      </div>
-    </div>
-
-    {{/* Quick nav */}}
-    <div class="card p-4">
-      <h3 class="text-xs font-mono font-medium uppercase tracking-widest mb-3" style="color: var(--fg-muted);">导航</h3>
-      <div class="space-y-2">
-        <a href="{{ .Site.BaseURL }}archives/" class="flex items-center gap-2 text-sm hover:text-primary transition-colors" style="color: var(--fg);">
-          <span class="text-xs font-mono" style="color: var(--fg-muted);">→</span> 时间线归档
-        </a>
-        <a href="{{ .Site.BaseURL }}tags/" class="flex items-center gap-2 text-sm hover:text-primary transition-colors" style="color: var(--fg);">
-          <span class="text-xs font-mono" style="color: var(--fg-muted);">→</span> 全部标签
-        </a>
-        <a href="{{ .Site.BaseURL }}index.xml" class="flex items-center gap-2 text-sm hover:text-primary transition-colors" style="color: var(--fg);">
-          <span class="text-xs font-mono" style="color: var(--fg-muted);">→</span> RSS 订阅
-        </a>
-      </div>
-    </div>
+  {{/* ===== Sidebar (4/12) ===== */}}
+  <div class="lg:col-span-4 space-y-4">
 
     {{/* About */}}
     <div class="card p-4">
-      <h3 class="text-xs font-mono font-medium uppercase tracking-widest mb-3" style="color: var(--fg-muted);">关于</h3>
+      <h3 class="text-xs font-mono font-medium uppercase tracking-widest mb-2" style="color: var(--fg-muted);">关于</h3>
       <p class="text-xs leading-relaxed" style="color: var(--fg-muted);">
-        每日追踪 AI 行业动态：融资、产品、技术突破、政策变化。由 Manus AI 生成，森 编辑审核。
+        每日追踪 AI 行业动态——融资、产品、技术突破、政策变化。由 Manus AI 生成，森 编辑审核。
       </p>
+      <div class="flex gap-3 mt-3 text-xs font-mono">
+        <a href="{{ .Site.BaseURL }}index.xml" class="hover:opacity-70 transition-opacity" style="color: var(--primary);">📡 RSS</a>
+        <a href="{{ .Site.BaseURL }}archives/" class="hover:opacity-70 transition-opacity" style="color: var(--primary);">时间线</a>
+      </div>
+    </div>
+
+    {{/* Tags */}}
+    {{ if .Site.Taxonomies.tags }}
+    <div class="card p-4">
+      <h3 class="text-xs font-mono font-medium uppercase tracking-widest mb-2" style="color: var(--fg-muted);">标签</h3>
+      <div class="flex flex-wrap gap-1.5">
+        {{ range .Site.Taxonomies.tags.ByCount }}
+        <a href="{{ .Page.Permalink }}" class="bg-tag text-xs font-mono px-1.5 py-0.5 rounded hover:opacity-80 transition-opacity">
+          {{ .Page.Title }}
+        </a>
+        {{ end }}
+      </div>
+    </div>
+    {{ end }}
+
+    {{/* Quick links / nav */}}
+    <div class="card p-4">
+      <h3 class="text-xs font-mono font-medium uppercase tracking-widest mb-2" style="color: var(--fg-muted);">板块说明</h3>
+      <div class="space-y-1.5 text-xs" style="color: var(--fg-muted);">
+        <div class="flex items-center gap-2"><span>⚡</span><span>今日速览 — 5 条核心新闻</span></div>
+        <div class="flex items-center gap-2"><span>📰</span><span>头条深读 — 当日最重要事件</span></div>
+        <div class="flex items-center gap-2"><span>🔭</span><span>赛道扫描 — 细分领域动态</span></div>
+        <div class="flex items-center gap-2"><span>🛠️</span><span>工具雷达 — 新工具推荐</span></div>
+        <div class="flex items-center gap-2"><span>📊</span><span>数据看板 — 关键行业指标</span></div>
+        <div class="flex items-center gap-2"><span>🌲</span><span>森说 — 编者独家评论</span></div>
+      </div>
     </div>
   </div>
 </div>
